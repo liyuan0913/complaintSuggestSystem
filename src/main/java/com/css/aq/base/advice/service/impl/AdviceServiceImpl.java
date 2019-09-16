@@ -9,9 +9,6 @@ import com.css.aq.base.Constant;
 import com.css.aq.base.advice.entity.Advice;
 import com.css.aq.base.advice.mapper.AdviceMapper;
 import com.css.aq.base.advice.service.AdviceService;
-import com.css.aq.base.complaint.entity.Complaint;
-import com.css.aq.base.eventType.entity.EventTypes;
-import com.css.aq.base.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +109,7 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
         if (!StringUtils.isNotEmpty(advice.getSystemNO())){
             throw new RuntimeException("必填字段不能为空");
         }
-        if(!StringUtils.isNotEmpty(advice.getEventTypeId())){
+        if(!StringUtils.isNotEmpty(advice.getEventTypeId().toString())){
             throw new RuntimeException("必填字段不能为空");
         }
         if(!StringUtils.isNotEmpty(advice.getAdviceTitle())){
@@ -121,9 +118,7 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
         if(!StringUtils.isNotEmpty(advice.getSuggestedContent())){
             throw new RuntimeException("必填字段不能为空");
         }
-        if(!StringUtils.isNotEmpty(advice.getNotificationPackageId())){
-            throw new RuntimeException("必填字段不能为空");
-        }
+
     }
 
 

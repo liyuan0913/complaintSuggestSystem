@@ -40,13 +40,13 @@ public class AdviceController {
     @GetMapping("/getPage")
     @ApiOperation(value = "根据系统编码进行分页查询")
     public Map<String,Object> getPage(@ApiParam("系统编码") @RequestParam String systemNO,
-                                 @ApiParam("page对象") @ModelAttribute("page") Page page
-                                 ){
+                                      @ApiParam("page对象") @ModelAttribute("page") Page page
+    ){
         Map<String,Object> result = new HashMap<>();
         IPage<Advice> pages = adviceService.getPage(systemNO,page);
         if (pages!=null){
             result.put("code", Result.successCode);
-            result.put("msg","查询成功");
+            /*result.put("msg","查询成功");*/
             result.put("data",pages);
         }else {
             result.put("code",Result.failCode);
@@ -64,7 +64,7 @@ public class AdviceController {
         try {
             Advice advice = adviceService.getAdviceById(adviceId);
             result.put("code", Result.successCode);
-            result.put("msg",Result.Msg);
+            /*result.put("msg",Result.Msg);*/
             result.put("data",advice);
         } catch (Exception e) {
             log.error("更新失败", e);
@@ -86,7 +86,7 @@ public class AdviceController {
     public Map<String,Object> addAdvice(@ApiParam("建议实体") @ModelAttribute Advice advice){
         Map<String,Object> result = new HashMap<>();
         try {
-           adviceService.addAdvice(advice);
+            adviceService.addAdvice(advice);
             result.put("code", Result.successCode);
             result.put("msg",Result.Msg);
             result.put("data", Result.data);
@@ -107,7 +107,7 @@ public class AdviceController {
     @PostMapping("delAdvice/{adviceId}")
     @ApiOperation(value = "删除某条建议(物理删除)")
     public Map<String,Object> delAdvice(@ApiParam("建议id") @PathVariable Long adviceId,
-                                       @ApiParam("系统编码") @RequestParam String systemNO){
+                                        @ApiParam("系统编码") @RequestParam String systemNO){
         Map<String,Object> result = new HashMap<>();
         try {
             adviceService.delAdvice(systemNO,adviceId);
@@ -133,7 +133,7 @@ public class AdviceController {
     @PostMapping("updAdvice/{adviceId}")
     @ApiOperation("修改建议")
     public Map<String,Object> updAdvice(@ApiParam("需要修改建议id") @PathVariable Long adviceId,
-                         @ApiParam("建议实体") @ModelAttribute Advice advice){
+                                        @ApiParam("建议实体") @ModelAttribute Advice advice){
         Map<String,Object> result = new HashMap<>();
         try {
             //根据id查询出来
@@ -186,7 +186,7 @@ public class AdviceController {
     @PostMapping("ljDelAdviceByIds")
     @ApiOperation(value = "批量删除建议(逻辑删除)")
     public Map<String,Object>  ljDelAdviceByIds(@ApiParam("ids") @RequestParam String adviceIds,
-                                                 @ApiParam("系统编码") @RequestParam String systemNO ){
+                                                @ApiParam("系统编码") @RequestParam String systemNO ){
         Map<String,Object> result = new HashMap<>();
         try {
             adviceService.updDelFlags(adviceIds,systemNO);
@@ -212,7 +212,7 @@ public class AdviceController {
     @GetMapping("/getAdviceByIdAndSystemNo/{adviceId}")
     @ApiOperation(value = "根据建议id和系统编码systemNO查询详情")
     public Map<String,Object> getAdviceByIdAndSystemNo(@ApiParam("建议id") @PathVariable Long adviceId,
-                                @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
+                                                       @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
         Map<String,Object> result = new HashMap<>();
         try {
             Advice advice = adviceService.getAdviceById(adviceId,systemNO);
@@ -237,7 +237,7 @@ public class AdviceController {
     @PostMapping("updDelFlag/{adviceId}")
     @ApiOperation(value = "删除某条建议(逻辑删除)")
     public Map<String,Object> updDelFlag(@ApiParam("建议id") @PathVariable Long adviceId,
-                          @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
+                                         @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
         Map<String,Object> result = new HashMap<>();
         try {
             adviceService.updDelFlag(adviceId,systemNO);
@@ -253,6 +253,7 @@ public class AdviceController {
         return result;
 
     }
+
 
 
 

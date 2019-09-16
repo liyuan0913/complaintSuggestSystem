@@ -47,7 +47,7 @@ public class Advice {
      */
     @TableField("EVENT_TYPE_ID")
     @ApiModelProperty("事件类型id")
-    private String eventTypeId;
+    private Long eventTypeId;
 
     /**
      *建议标题
@@ -81,8 +81,10 @@ public class Advice {
      * 删除标记（1：删除  非1：未删除）
      */
     @TableField("DEL_FLAG")
-    @ApiModelProperty(value = "删除标记（1：删除  非1：未删除）",example = "0")
+    @ApiModelProperty(value = "删除标记（1:未删除  2:删除）")
     private Integer delFlag;
+
+
 
 
 
