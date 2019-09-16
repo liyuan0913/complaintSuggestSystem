@@ -4,10 +4,10 @@ server:
     context-path: /suggestion
 spring:
   datasource:
-    url: jdbc:dm://192.168.23.63:5236/SUGGES
+    url: jdbc:dm://10.13.16.239:5236/SUGGES
     driver-class-name: dm.jdbc.driver.DmDriver
     username: SUGGES
-    password: SUGGES123!@#
+    password: 1234567890
     # hikaril连接池配置
     hikari:
       #客户端等待连接池连接的最大毫秒数
@@ -32,8 +32,13 @@ spring:
     cache: false # 开发时关闭缓存,不然没法看到实时页面
     servlet:
       content-type: text/html
+
   jmx:
     default-domain: suggestion
+  mvc:
+    view:
+      prefix: classpath:/templates/
+      suffix: .html
 
 
 
