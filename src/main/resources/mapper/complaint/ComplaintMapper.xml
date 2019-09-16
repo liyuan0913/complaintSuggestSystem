@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.css.aq.base.complaint.mapper.ComplaintMapper">
+
+    <!--逻辑删除，即将del_flag置为1-->
+    <update id="delComplaintEvent">
+        update COMPLAINT
+        set DEL_FLAG=2 where
+        COMPLAINT_ID in
+        <foreach collection="ids" item="complaintId" open="(" close=")" separator=",">
+            #{complaintId}
+        </foreach>
+        and SYSTEM_NO=#{systemNo}
+    </update>
+
+</mapper>

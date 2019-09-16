@@ -1,0 +1,20 @@
+.web-title{
+    text-align: center;
+    font-size: 52px;
+    padding-top: 100px;
+}
+.login_wrap{
+    margin: 0 auto;
+    padding: 20px;
+    width: 40%;
+    background: #fff;
+    text-align: center;
+}
+.login_item{
+    margin:20px auto;
+}
+.login_item span{
+    display:inline-block;
+    width:100px;
+    text-align:right ;
+}

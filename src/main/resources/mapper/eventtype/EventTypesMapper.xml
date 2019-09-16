@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.css.aq.base.eventType.mapper.EventTypesMapper">
+
+    <!--根据系统编码查询事件类型列表-->
+    <select id="getEventTypeList"  resultType="com.css.aq.base.eventType.entity.EventTypes">
+        select * from EVENT_TYPES where 1=1
+        <if test="systemNo != null and systemNo != ''">
+            and SYSTEM_NO = #{systemNo}
+        </if>
+        and DEL_FLAG=1
+    </select>
+
+    <!--根据系统编码和事件类型id删除事件类型-->
+    <update id="updEventTypeDelFlag">
+        update  EVENT_TYPES
+        set DEL_FLAG=2
+        where 1=1
+        <if test="eventTypeId != null">
+            and EVENT_TYPE_ID = #{eventTypeId}
+        </if>
+        <if test="systemNo != null and systemNo != ''">
+            and SYSTEM_NO = #{systemNo}
+        </if>
+    </update>
+
+</mapper>

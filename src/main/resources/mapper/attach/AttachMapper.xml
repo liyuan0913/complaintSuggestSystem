@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.css.aq.base.attach.mapper.AttachMapper">
+    <!--根据系统编码,投诉事件ID，查询投诉上传证明材料列表-->
+    <select id="getComplaintEventUplaod"  resultType="com.css.aq.base.attach.entity.Attach">
+        select * from ATTACH where 1=1 and DEL_FLAG = 1
+        <if test="systemNo != null and systemNo != ''">
+            and SYSTEM_NO = #{systemNo}
+        </if>
+        <if test="complaintId != null and complaintId != ''">
+            and COMPLAINT_ID = #{complaintId}
+        </if>
+
+    </select>
+
+    <!--逻辑删除，即将del_flag置为1-->
+    <update id="delComplaintEventUplaod">
+        update ATTACH
+        set DEL_FLAG=2 where
+        COMPLAINT_ID in
+        <foreach collection="ids" item="complaintId" open="(" close=")" separator=",">
+            #{complaintId}
+        </foreach>
+        and SYSTEM_NO=#{systemNo}
+    </update>
+
+</mapper>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/head :: head(~{::title},~{})">
+    <title>基础支撑平台</title>
+</head>
+<body style="margin: 0;padding: 0;background-color: #6ab8f7;" onkeydown="enterKeyCodeLogin()">
+<h1 class="web-title" style="letter-spacing: 20px;">基础支撑平台</h1>
+<div id="login" class="login_wrap" style="border-radius: 2%;">
+    <!--easyui-dialog-->
+    <form id="loginForm"  method="post">
+        <div class="login_item" style="margin-right: 50px;">
+            <span>用户名：</span>
+            <input class="easyui-textbox" id="username" prompt="请填写登录名" iconWidth="28" style="width:40%;height:34px;padding:10px;">
+            <!--<input type="text" name="LoginName" class="easyui-validatebox" data-options="require: true,missingMessage: '请填写登录名" />-->
+        </div>
+        <div class="login_item" style="margin-right: 50px;">
+            <span>密   码：</span>
+            <input class="easyui-passwordbox" id="password" prompt="请填写密码" iconWidth="10" showEye="false" style="width:40%;height:34px;padding:10px">
+            <!--<input type="text" name="LoginPwd" class="easyui-validatebox" data-options="require: true,missingMessage: '请填写密码" />-->
+        </div>
+        <div style="text-align:center;padding:40px 0 20px">     <!--class="login_item"-->
+            <a onclick="doLogin()" href="javascript:void(0)"  class="easyui-linkbutton" style="width: 80px">登录</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width: 80px">重置</a>
+        </div>
+    </form>
+</div>
+<div th:include="common/foot :: footer"></div>
+<!--<div class="copyright" style="width: 100%;text-align: center;">Copyright  ©2019  中国软件</div>-->
+<script>
+    // 根据后台返回的json数据进行判断
+    /* function chuLi(jsonData){
+         $.procAjaxMsg(jsonData, function(){
+             window.location.href = jsonDate.BackUrl;
+         },function(){
+             $.alertMsg(jsonData.Msg, '登录提示');
+         })
+     }*/
+    function enterKeyCodeLogin() {
+        if (event.keyCode == 13){
+            var  username =  $('#username').val();
+            var  password =  $('#password').val();
+            if (isNull(username)){
+                alertInfoMessage("请输入用户名");
+                return;
+            }
+            if (isNull(password)){
+                alertInfoMessage("请输入密码");
+                return;
+            }
+            doLogin();
+        }
+    }
+    function clearForm() {
+        $('#loginForm').form('clear');
+    }
+    function doLogin() {
+        var  username =  $('#username').val();
+        var  password =  $('#password').val();
+        var  sysUser = {"loginName":username,"password":password};
+        $.ajax({
+            url: "/base/user/doLogin",
+            method:"post",
+            contentType: "application/json;charset=UTF-8",
+            dataType:"json",
+            data:JSON.stringify(sysUser),
+            success :function (data) {
+                if ( data.success == true) {
+                    // $.toast(data.errMsg);
+                    window.location.href = 'index.html';
+                } else {
+                    alert(data.message);
+                }
+            },error:function () {
+                alert("请稍后再试....");
+            }
+        });
+    }
+</script>
+</body>
+</html>

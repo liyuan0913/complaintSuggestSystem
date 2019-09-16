@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/head :: head(~{::title},~{})">
+    <title>基础支撑平台</title>
+</head>
+<body class="easyui-layout">
+<!--头部-->
+<div region="north" border="true" style="overflow: hidden;height: 50px;line-height: 47px;background-color: #3c8dbc;color: #fff;">
+    <div class="top-bg" style="float: left;width: auto;font-size: 23px;border: 0;margin-left: 20px;">
+        基础支撑平台
+    </div>
+    <a  onclick="logout()" style="float: right;margin-right: 20px;cursor: pointer">退出</a>
+    <div style="float: right;width: 100px;border: 0;">
+        欢迎：<shiro:principal  property="loginName"/>
+    </div>
+</div>
+<!--左侧导航栏-->
+<div region="west"  title="菜单列表"   style="width: 195px;height:100%" >
+    <div id="leftmenu"></div>
+</div>
+<!--中间内容-->
+<div data-options="region:'center',border:false" style="overflow: hidden;">
+    <!--<div style="width:100%;height:100%;position: relative;">
+        <div id="leftmenudiv" style="width: 195px;height:100%;display: inline-block;">
+            <div class="easyui-panel" id="caidan" title="菜单列表" style="width:100%;height:100%;overflow-x:hidden;overflow-y:auto;" data-options="onOpen: onPanelOpen">
+                <div id="leftmenu"></div>
+            </div>
+        </div>
+
+        <div id="center_tabs" class="easyui-tabs" data-options="fit:true" style="display: inline-block; position: absolute;">
+            <div title="首页" data-options="fit:true,closable:false" style="overflow:hidden;background-color:#fff;">
+                欢迎您：<shiro:principal  property="loginName"/>
+            </div>
+        </div>
+
+    </div>-->
+    <div id="center_tabs" class="easyui-tabs" data-options="fit:true" style="display: inline-block; position: absolute;">
+        <div title="首页" data-options="fit:true,closable:false" style="overflow:hidden;background-color:#fff;">
+            欢迎您：<shiro:principal  property="loginName"/>
+        </div>
+    </div>
+
+    <div class="menu-list easyui-menu" id="tabMenu" style="width: 120px;">
+        <div name="9">刷新标签页</div>
+        <div name="1">关闭标签页</div>
+        <div name="3">关闭其他标签页</div>
+        <div name="2">关闭全部标签页</div>
+        <div name="4">关闭右侧标签页</div>
+        <div name="5">关闭左侧标签页</div>
+    </div>
+</div>
+
+<!--底部-->
+<div region="south" border="true" style="overflow: hidden; height: 50px;">
+    <div th:include="common/foot :: footer"></div>
+</div>
+<script type="text/javascript">
+    // 获取选中的标签页面板（tab panel）和它的标签页（tab）对象
+    /*var pp = $('#tt').tabs('getSelected');
+    var tab = pp.panel('options').tab; // 相应的标签页（tab）对象*/
+    // 获取菜单列表
+    $.ajax({
+        type:"get",
+        url:'function/listMenu',
+        dataType:"json",
+        success:function (data) {
+            if (data.success){
+                initMenuTree(data.result);
+            } else {
+                $.messager.show(data.message);
+            }
+        }
+    });
+    function initMenuTree(menuData){
+        $("#leftmenu").sidemenu({
+            border:0,
+            width:193,
+            data:menuData,
+            //左侧菜单事件弹出tab
+            onSelect: function(node){
+                if ($('#center_tabs').tabs('exists', node.text)){
+                    $('#center_tabs').tabs('select', node.text);
+                } else {
+                    var content = '<iframe scrolling="auto" frameborder="0" name="'+ node.id +'" src="'+node.url+'" style="top:0;left:0;width:100%;height:99%;"></iframe>';
+                    $('#center_tabs').tabs('add',{
+                        title: node.text,
+                        content: content,
+                        closable:true
+                    });
+                }
+            }
+        });
+    };
+
+    function logout() {
+        $.ajax({
+            type:"get",
+            url:'user/logout',
+            success:function (data) {
+                if (data.success){
+                    window.location.href='login.html'
+                }
+            }
+        });
+    }
+
+    // 左侧菜单折叠显示图标
+    function onPanelOpen(){
+        // debugger;
+        var panel = $(this);
+        var _1e = panel.panel("header").children("div.panel-tool");
+        _1e.children("a.panel-tool-collapse").hide();
+
+        var _20 = "layout-button-left";// + _1f[dir];
+        var t = _1e.children("a." + _20);
+        if (!t.length) {
+            t = $("<a href=\"javascript:;\"></a>").addClass(_20).appendTo(_1e);
+            t.bind("click", {dir: "left"}, function (e) {
+                if (e.target.className == "layout-button-right"){
+                    e.target.className = "layout-button-left"
+                    onWestExpand();
+                    panel.panel("setTitle", panel.titleTemp);
+                    panel.panel('resize', {
+                        width: 193
+                    });
+
+                    var leftMenuDiv = $('#leftmenudiv');
+                    leftMenuDiv.each(function () {
+                        this.style.width = '193px';
+                    });
+                }
+                else {
+                    e.target.className = "layout-button-right"
+                    onWestCollapse();
+                    var opt = panel.panel('options');
+                    panel.titleTemp = opt.title;
+                    panel.panel("setTitle", "");
+                    panel.panel('resize', {
+                        width: 42
+                    });
+
+                    var leftMenuDiv = $('#leftmenudiv');
+                    leftMenuDiv.each(function () {
+                        this.style.width = '42px';
+                    });
+                }
+
+                return false;
+            });
+        }
+    }
+    // 左侧菜单折叠
+    function onWestCollapse() {
+        debugger;
+        var opts = $('#leftmenu').sidemenu('options');
+        if (opts.collapsed != 'collapse') {
+            $('#leftmenu').sidemenu('collapse');
+            $('#leftmenu').sidemenu('resize', {
+                width: 42
+            });
+        }
+    }
+    // 左侧菜单打开
+    function onWestExpand() {
+        debugger;
+        var opts = $('#leftmenu').sidemenu('options');
+        if (opts.collapsed != 'expand') {
+            $('#leftmenu').sidemenu('expand');
+            $('#leftmenu').sidemenu('resize', {
+                width: 193
+            });
+        }
+    }
+</script>
+</body>
+</html>
