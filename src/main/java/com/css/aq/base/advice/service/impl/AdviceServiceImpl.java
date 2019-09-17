@@ -28,13 +28,15 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
     private AdviceMapper adviceMapper;
 
     @Override
-    public IPage<Advice> getPage(String systemNO, Page page){
+    public IPage<Advice> getPage(Advice advice,Integer pageNo,Integer pageSize){
         QueryWrapper<Advice> queryWrapper = new QueryWrapper<>();
         //根据系统编码进行查询
-        queryWrapper.eq("SYSTEM_NO",systemNO);
+        if(advice.getSystemNO() != null && advice.getSystemNO() != ""){
+            queryWrapper.eq("SYSTEM_NO",advice.getSystemNO());
+        }
         //将删除的标志置为1
         queryWrapper.eq("DEL_FLAG",1);
-        IPage<Advice> pageList=page(page,queryWrapper);
+        IPage<Advice> pageList=page(new Page<>(pageNo,pageSize),queryWrapper);
         return pageList;
 
     }
@@ -107,16 +109,16 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
     //判空工具类
     private void isEmpty(Advice advice){
         if (!StringUtils.isNotEmpty(advice.getSystemNO())){
-            throw new RuntimeException("必填字段不能为空");
+            throw new RuntimeException("必填字段不能为空1");
         }
         if(!StringUtils.isNotEmpty(advice.getEventTypeId().toString())){
-            throw new RuntimeException("必填字段不能为空");
+            throw new RuntimeException("必填字段不能为空2");
         }
         if(!StringUtils.isNotEmpty(advice.getAdviceTitle())){
-            throw new RuntimeException("必填字段不能为空");
+            throw new RuntimeException("必填字段不能为空3");
         }
         if(!StringUtils.isNotEmpty(advice.getSuggestedContent())){
-            throw new RuntimeException("必填字段不能为空");
+            throw new RuntimeException("必填字段不能为空4");
         }
 
     }

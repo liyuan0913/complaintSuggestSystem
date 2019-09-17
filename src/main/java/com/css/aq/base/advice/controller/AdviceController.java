@@ -1,7 +1,6 @@
 package com.css.aq.base.advice.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.css.aq.base.Result;
 import com.css.aq.base.advice.entity.Advice;
 import com.css.aq.base.advice.service.AdviceService;
@@ -33,17 +32,19 @@ public class AdviceController {
 
     /**
      * 分页查询
-     * @param systemNO
-     * @param page
+     * @param advice
+     * @param pageNo
+     * @param pageSize
      * @return
      */
     @GetMapping("/getPage")
-    @ApiOperation(value = "根据系统编码进行分页查询")
-    public Map<String,Object> getPage(@ApiParam("系统编码") @RequestParam String systemNO,
-                                      @ApiParam("page对象") @ModelAttribute("page") Page page
+    @ApiOperation(value = "进行分页查询")
+    public Map<String,Object> getPage(@ApiParam("建议实体") @ModelAttribute Advice advice,
+                                      @ApiParam("页码") @RequestParam Integer pageNo,
+                                      @ApiParam("每页数量") @RequestParam Integer pageSize
     ){
         Map<String,Object> result = new HashMap<>();
-        IPage<Advice> pages = adviceService.getPage(systemNO,page);
+        IPage<Advice> pages = adviceService.getPage(advice,pageNo,pageSize);
         if (pages!=null){
             result.put("code", Result.successCode);
             /*result.put("msg","查询成功");*/
@@ -94,6 +95,7 @@ public class AdviceController {
             log.error("更新失败", e);
             result.put("code",Result.failCode);
             result.put("msg",e.getMessage());
+            result.put("data", Result.data);
         }
         return result;
     }

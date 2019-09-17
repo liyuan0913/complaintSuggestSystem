@@ -1,11 +1,8 @@
 package com.css.aq.base.advice.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.css.aq.base.advice.entity.Advice;
-
-import java.util.List;
 
 /**
  * Demo class
@@ -16,11 +13,12 @@ public interface AdviceService extends IService<Advice> {
 
     /**
      * 分页查询
-     * @param systemNO
-     * @param page
+     * @param advice
+     * @param pageNo
+     * @param pageSize
      * @return
      */
-    public IPage<Advice> getPage(String systemNO, Page page);
+    public IPage<Advice> getPage(Advice advice,Integer pageNo,Integer pageSize);
 
     /**
      * 查询意见详情
