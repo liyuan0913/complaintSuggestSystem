@@ -58,25 +58,6 @@ public class AdviceController {
     }
 
 
-    @GetMapping("/getAdviceById/{adviceId}")
-    @ApiOperation(value = "查看建议详情")
-    public Map<String,Object> getAdviceById(@ApiParam("建议id") @PathVariable Long adviceId){
-        Map<String,Object> result = new HashMap<>();
-        try {
-            Advice advice = adviceService.getAdviceById(adviceId);
-            result.put("code", Result.successCode);
-            /*result.put("msg",Result.Msg);*/
-            result.put("data",advice);
-        } catch (Exception e) {
-            log.error("更新失败", e);
-            result.put("code",Result.failCode);
-            result.put("msg",e.getMessage());
-            result.put("data", Result.data);
-        }
-        return result;
-
-    }
-
 
     /**
      * 用户填写意见
@@ -128,6 +109,84 @@ public class AdviceController {
 
 
     /**
+     * 批量删除(物理删除)
+     * @param adviceIds
+     * @return
+     */
+    @PostMapping("delAdviceByIds")
+    @ApiOperation(value = "批量删除建议(物理删除)")
+    public Map<String,Object>  delAdviceByIds(@ApiParam("ids") @RequestParam String adviceIds){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            Integer status = adviceService.delAdviceList(adviceIds);
+            result.put("code", Result.successCode);
+            result.put("msg",Result.Msg);
+            result.put("data", Result.data);
+        } catch (Exception e) {
+            log.error("删除失败", e);
+            result.put("code",Result.failCode);
+            result.put("msg",e.getMessage());
+            result.put("data", Result.data);
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 根据建议id和系统编码systemNO删除建议(2019/9/10 下午)
+     * @param adviceId
+     * @param systemNO
+     * @return
+     */
+    @PostMapping("updDelFlag/{adviceId}")
+    @ApiOperation(value = "删除某条建议(逻辑删除)")
+    public Map<String,Object> updDelFlag(@ApiParam("建议id") @PathVariable Long adviceId,
+                                         @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            adviceService.updDelFlag(adviceId,systemNO);
+            result.put("code", Result.successCode);
+            result.put("msg",Result.Msg);
+            result.put("data", Result.data);
+        } catch (Exception e) {
+            log.error("删除失败", e);
+            result.put("code",Result.failCode);
+            result.put("msg",e.getMessage());
+            result.put("data", Result.data);
+        }
+        return result;
+
+    }
+
+
+    /**
+     * 根据系统编码批量删除(逻辑删除)
+     * @param adviceIds
+     * @return
+     */
+    @PostMapping("ljDelAdviceByIds")
+    @ApiOperation(value = "批量删除建议(逻辑删除)")
+    public Map<String,Object>  ljDelAdviceByIds(@ApiParam("ids") @RequestParam String adviceIds,
+                                                @ApiParam("系统编码") @RequestParam String systemNO ){
+        Map<String,Object> result = new HashMap<>();
+        try {
+            adviceService.updDelFlags(adviceIds,systemNO);
+            result.put("code", Result.successCode);
+            result.put("msg",Result.Msg);
+            result.put("data", Result.data);
+        } catch (Exception e) {
+            log.error("删除失败", e);
+            result.put("code",Result.failCode);
+            result.put("msg",e.getMessage());
+            result.put("data", Result.data);
+        }
+        return result;
+    }
+
+
+
+    /**
      * 修改建议
      * @param adviceId
      * @param advice
@@ -158,51 +217,27 @@ public class AdviceController {
     }
 
     /**
-     * 批量删除(物理删除)
-     * @param adviceIds
+     * 根据建议id查询详情(2019/9/10 下午)
+     * @param adviceId
      * @return
      */
-    @PostMapping("delAdviceByIds")
-    @ApiOperation(value = "批量删除建议(物理删除)")
-    public Map<String,Object>  delAdviceByIds(@ApiParam("ids") @RequestParam String adviceIds){
+    @GetMapping("/getAdviceById/{adviceId}")
+    @ApiOperation(value = "查看建议详情")
+    public Map<String,Object> getAdviceById(@ApiParam("建议id") @PathVariable Long adviceId){
         Map<String,Object> result = new HashMap<>();
         try {
-            Integer status = adviceService.delAdviceList(adviceIds);
+            Advice advice = adviceService.getAdviceById(adviceId);
             result.put("code", Result.successCode);
-            result.put("msg",Result.Msg);
-            result.put("data", Result.data);
+            /*result.put("msg",Result.Msg);*/
+            result.put("data",advice);
         } catch (Exception e) {
-            log.error("删除失败", e);
+            log.error("更新失败", e);
             result.put("code",Result.failCode);
             result.put("msg",e.getMessage());
             result.put("data", Result.data);
         }
         return result;
 
-    }
-
-    /**
-     * 根据系统编码批量删除(逻辑删除)
-     * @param adviceIds
-     * @return
-     */
-    @PostMapping("ljDelAdviceByIds")
-    @ApiOperation(value = "批量删除建议(逻辑删除)")
-    public Map<String,Object>  ljDelAdviceByIds(@ApiParam("ids") @RequestParam String adviceIds,
-                                                @ApiParam("系统编码") @RequestParam String systemNO ){
-        Map<String,Object> result = new HashMap<>();
-        try {
-            adviceService.updDelFlags(adviceIds,systemNO);
-            result.put("code", Result.successCode);
-            result.put("msg",Result.Msg);
-            result.put("data", Result.data);
-        } catch (Exception e) {
-            log.error("删除失败", e);
-            result.put("code",Result.failCode);
-            result.put("msg",e.getMessage());
-            result.put("data", Result.data);
-        }
-        return result;
     }
 
 
@@ -231,31 +266,7 @@ public class AdviceController {
     }
 
 
-    /**
-     * 根据建议id和系统编码systemNO删除建议(2019/9/10 下午)
-     * @param adviceId
-     * @param systemNO
-     * @return
-     */
-    @PostMapping("updDelFlag/{adviceId}")
-    @ApiOperation(value = "删除某条建议(逻辑删除)")
-    public Map<String,Object> updDelFlag(@ApiParam("建议id") @PathVariable Long adviceId,
-                                         @ApiParam("系统编码") @RequestParam("systemNO") String systemNO){
-        Map<String,Object> result = new HashMap<>();
-        try {
-            adviceService.updDelFlag(adviceId,systemNO);
-            result.put("code", Result.successCode);
-            result.put("msg",Result.Msg);
-            result.put("data", Result.data);
-        } catch (Exception e) {
-            log.error("删除失败", e);
-            result.put("code",Result.failCode);
-            result.put("msg",e.getMessage());
-            result.put("data", Result.data);
-        }
-        return result;
 
-    }
 
 
 
