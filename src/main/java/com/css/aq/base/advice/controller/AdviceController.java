@@ -71,6 +71,7 @@ public class AdviceController {
             log.error("更新失败", e);
             result.put("code",Result.failCode);
             result.put("msg",e.getMessage());
+            result.put("data", Result.data);
         }
         return result;
 
