@@ -3,7 +3,6 @@ package com.css.aq.base.eventType.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.css.aq.base.Result;
-import com.css.aq.base.advice.entity.Advice;
 import com.css.aq.base.eventType.entity.EventTypes;
 import com.css.aq.base.eventType.service.EventTypesService;
 import com.css.aq.base.util.BeanUtil;
@@ -70,7 +69,7 @@ public class EventTypesController {
             }
             List<EventTypes> eventTypeList = eventTypesService.getEventTypeList(systemNo);
             result.put("code", Result.successCode);
-            result.put("msg","查询成功");
+            /*result.put("msg","查询成功");*/
             result.put("data", eventTypeList);
             return result;
         } catch (Exception e) {
