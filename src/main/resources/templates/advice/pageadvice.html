@@ -4,7 +4,7 @@
     <title>建议服务平台</title>
 </head>
 <body class="easyui-layout">
-<div class="easyui-layout" data-options="region:'center'" style="width: 82%;height: 100px">
+<div class="easyui-layout" data-options="region:'center'" style="width: 82%;">
     <div data-options="region: 'north'" style="margin:10px 0 10px 10px;border: 0;">
         <!--根据岗位名称进行查询-->
         <span style="padding-right: 10px">系统编码:</span><input class="easyui-textbox" id="systemNo">
@@ -28,7 +28,6 @@
             </thead>
         </table>
     </div>
-    <div id="container" data-options="region: 'south'" style="width:80%;height:150px;margin:0 auto;text-align: center;z-index: 1000"></div>
     <div id="toolbar_position">
         <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyAdvice()">批量删除</a>
     </div>
@@ -77,7 +76,8 @@
     function operation(value,rowData,rowIndex) {
         return '<button onclick="updateAdvice(\''+rowData["positionId"]+'\')" >修改</button> ' +
             '<button onclick="deleteAdvice(\''+rowData["adviceId"]+'\')" >删除</button>  ' +
-            '<button onclick="getAdvice(\''+rowData["adviceId"]+'\')" >查看详情</button>  ' ;
+           //'<button onclick="getAdvice(\''+rowData["adviceId"]+'\')" >查看详情</button>  ' ;
+           '<a class="easyui-linkbutton" href="test?adviceId='+rowData["adviceId"]+'">查看详情</a>  ';
     }
 
     //删除数据的方法
@@ -188,32 +188,9 @@
 
 
     //查看详情
-    /*function getAdvice(adviceId){
-       // window.location.href='test';
-
-      $.ajax({
-            url:rootPath+"/suggestion/advice/getAdviceById/"+adviceId,
-            type: 'get',
-            dataType: 'json',
-            success: function (data) {
-                var listdata = data.data;       //列表数据
-                if (listdata) {
-                    var listInfo = "";
-                    alert(listdata.advicePerson);
-                        listInfo += "<div class='suggestionDetail-content'>" +
-                            "<h2 class='建议标题'>"  + listdata.adviceTitle + "</h2>" +
-                            "<div class='' style='margin:20px 0 20px 0'>" +
-                            "<span>"+ "时间:" +"</span>"+"<span style='padding:20px'>"+ listdata.adviceDate +"</span>"+
-                            "<span>"+ "建议人:" +"</span>"+"<span>"+ listdata.advicePerson +"</span>"+
-                            "</div>" +
-                            "</div>";
-
-                    $("#container")[0].innerHTML = listInfo;
-                }
-            }
-        })
-
-    }*/
+    function getAdvice(adviceId){
+       location.href="test?adviceId='+adviceId+'";
+    }
 
 
 </script>

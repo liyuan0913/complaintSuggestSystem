@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head th:replace="common/head :: head(~{::title},~{})">
-    <title>建议服务平台</title>
+    <title>详情页</title>
 </head>
 <body>
 <div id="container" style="width:80%;margin:0 auto;text-align: center"></div>
 <script type="text/javascript">
+   function getRequest(){
+       var url=location.search;
+       var theReuest={};
+       if(url.indexOf('?')!=-1){
+           var str=url.substr(1);
+            strs=str.split("&");
+           for(var i=0;i<strs.length;i++){
+               theReuest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+           }
+       }
+       return theReuest;
+   }
+
     $(function () {
+        var Request={};
+        Request=getRequest();
+        var adviceId=Request['adviceId'];
         $.ajax({
             url:rootPath+"/suggestion/advice/getAdviceById/"+adviceId,
             type: 'get',
