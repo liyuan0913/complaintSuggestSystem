@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/head :: head(~{::title},~{})">
+    <title>建议服务平台</title>
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</head>
+<body>
+<div style="padding:10px 40px;">
+    <form id="positionForm" data-options="novalidate:true" enctype="multipart/form-data" method="post">
+
+        <!--系统编码-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="systemNO" id="systemNO" style="width:393px" data-options="label:'系统编码:',required:true">
+        </div>
+
+        <!--建议人-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="advicePerson" id="advicePerson" style="width:393px" data-options="label:'建议人:'">
+        </div>
+
+        <!--建议标题-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="adviceTitle" id="adviceTitle" style="width:393px" data-options="label:'建议标题:',required:true">
+        </div>
+
+        <!--事件类型-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="eventTypeId" id="eventTypeId" style="width:393px" data-options="label:'事件类型:',required:true">
+        </div>
+
+
+        <!--<div style="margin-bottom:20px">
+            <span style="display: inline-block;padding-right: 0px">事件类型：</span>
+            <select id="eventTypeId" name="eventTypeId" class="easyui-combobox"  style="width:314px"
+                    data-options="editable:false,panelHeight:'auto'">
+                <option value="">请选择</option>
+                <option value="0">厅级</option>
+                <option value="1">处级</option>
+                <option value="2">科级</option>
+                <option value="3">科员</option>
+                <option value="4">办事员</option>
+            </select>
+        </div>-->
+
+
+        <!--建议内容-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="suggestedContent" id="suggestedContent" style="width:393px;height:100px" data-options="label:'建议内容:',required:true,multiline:true">
+        </div>
+
+        <!--证明材料附件上传id-->
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" name="notificationPackageId" id="notificationPackageId" style="width:393px" data-options="label:'证明材料附件:'">
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons" class="dialog-button" style="top:88px;text-align:center;padding:5px 0;border:0">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6"  onclick="submitPositionForm()" style="width: 80px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="clearForm()" style="width: 80px">取消</a>
+</div>
+<script>
+
+    var queryDialogParams = getDialogQueryParams("position");  //取出弹窗里边的参数
+    var positionId = queryDialogParams["positionId"];
+    var orgId = queryDialogParams["orgId"];
+    $("#orgId").val(orgId);
+    //有岗位Id 证明是修改
+    if( null != positionId){
+        $.ajax({
+            type:"get",
+            url:rootPath+"/base/position/selectSysPositionById/"+positionId,
+            dataType:"json",
+            success:function (data) {
+                if (data.success) {
+                    $("#positionForm").form('load',data.result);
+
+                } else {
+                    alertInfoMessage(data.message);
+                }
+            }
+        })
+    }
+
+    function submitPositionForm(){
+        debugger;
+        var url = rootPath+"/suggestion/advice/addAdvice";
+        $.ajax({
+            type:"post",
+            url:url,
+            dataType:"json",
+            data:$('#positionForm').serialize(),
+            success:function (data) {
+                if (data.success){
+                    var id = data.result;
+                    closeDialog("positionForm");    // 关闭dialog
+                    //showMessage(data.msg);           // 弹出操作成功的消息窗口
+                    window.open('test.html');
+                } else {
+                    alertInfoMessage(data.msg);
+                }
+            }
+        });
+    }
+
+
+
+
+    function clearForm(){
+        closeDialog("positionForm");
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/head :: head(~{::title},~{})">
+    <title>建议服务平台</title>
+</head>
+<body>
+<div id="container" style="width:80%;margin:0 auto;text-align: center"></div>
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url:rootPath+"/suggestion/advice/getAdviceById/"+adviceId,
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                alert(1);
+                var listdata = data.data;       //列表数据
+                if (listdata) {
+                    var listInfo = "";
+                    alert(listdata.advicePerson);
+                    listInfo += "<div class='suggestionDetail-content'>" +
+                        "<h2 class='建议标题'>"  + listdata.adviceTitle + "</h2>" +
+                        "<div class='' style='margin:20px 0 20px 0'>" +
+                        "<span>"+ "时间:" +"</span>"+"<span style='padding:20px'>"+ listdata.adviceDate +"</span>"+
+                        "<span>"+ "建议人:" +"</span>"+"<span>"+ listdata.advicePerson +"</span>"+
+                        "</div>" +
+                        "</div>";
+
+                    $("#container")[0].innerHTML = listInfo;
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>
