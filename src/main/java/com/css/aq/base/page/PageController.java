@@ -12,9 +12,9 @@ public class PageController {
 
     //------------------------意见相关----------------------------------start
 
-    @RequestMapping(value = "advice/pageadvice")
-    public String pageadvic() {
-        return "advice/pageadvice";
+    @RequestMapping(value = "advice/pageAdvice")
+    public String pageAdvic() {
+        return "advice/pageAdvice";
     }
 
     @GetMapping(value = "advice/advice")
