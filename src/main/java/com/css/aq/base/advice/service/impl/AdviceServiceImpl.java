@@ -28,27 +28,27 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
     private AdviceMapper adviceMapper;
 
     @Override
-    public IPage<Advice> getPage(Advice advice,Integer pageNo,Integer pageSize){
+    public IPage<Advice> getPage(Advice advice, Integer pageNo, Integer pageSize) {
         QueryWrapper<Advice> queryWrapper = new QueryWrapper<>();
         //根据系统编码进行查询
-        if(advice.getSystemNO() != null && advice.getSystemNO() != ""){
-            queryWrapper.eq("SYSTEM_NO",advice.getSystemNO());
+        if (advice.getSystemNO() != null && advice.getSystemNO() != "") {
+            queryWrapper.eq("SYSTEM_NO", advice.getSystemNO());
         }
         //将删除的标志置为1
-        queryWrapper.eq("DEL_FLAG",1);
-        IPage<Advice> pageList=page(new Page<>(pageNo,pageSize),queryWrapper);
+        queryWrapper.eq("DEL_FLAG", 1);
+        IPage<Advice> pageList = page(new Page<>(pageNo, pageSize), queryWrapper);
         return pageList;
 
     }
 
     @Override
-    public Advice getAdviceById(Long adviceId){
+    public Advice getAdviceById(Long adviceId) {
         return adviceMapper.selectById(adviceId);
 
     }
 
     @Override
-    public int addAdvice(Advice advice){
+    public int addAdvice(Advice advice) {
         isEmpty(advice);
         advice.setAdviceDate(new Date());
         advice.setDelFlag(Constant.NO_DELETE);
@@ -56,30 +56,30 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
     }
 
     @Override
-    public int delAdvice(String systemNO,Long adviceId){
+    public int delAdvice(String systemNO, Long adviceId) {
         QueryWrapper<Advice> queryWrapper = new QueryWrapper<>();
-        if(systemNO != null && systemNO != ""){
-            queryWrapper.eq("SYSTEM_NO",systemNO);
+        if (systemNO != null && systemNO != "") {
+            queryWrapper.eq("SYSTEM_NO", systemNO);
         }
-        if(adviceId != null){
-            queryWrapper.eq("ADVICE_ID",adviceId);
+        if (adviceId != null) {
+            queryWrapper.eq("ADVICE_ID", adviceId);
         }
         return adviceMapper.delete(queryWrapper);
 
     }
 
     @Override
-    public int updAdvice(Advice advice){
+    public int updAdvice(Advice advice) {
         return adviceMapper.updateById(advice);
     }
 
     @Override
-    public int delAdviceList(String adviceIds){
+    public int delAdviceList(String adviceIds) {
         //把string的字符串分割开
         String arr[] = adviceIds.split(",");
         List ids = new ArrayList();
         //把分割好的字符串放到数组里边
-        for(int i= 0;i<arr.length;i++){
+        for (int i = 0; i < arr.length; i++) {
             ids.add(arr[i]);
         }
         return adviceMapper.deleteBatchIds(ids);
@@ -87,37 +87,37 @@ public class AdviceServiceImpl extends ServiceImpl<AdviceMapper, Advice> impleme
 
 
     @Override
-    public Advice getAdviceById(Long adviceId,String systemNO){
-        return adviceMapper.getAdviceById(adviceId,systemNO);
+    public Advice getAdviceById(Long adviceId, String systemNO) {
+        return adviceMapper.getAdviceById(adviceId, systemNO);
     }
 
     @Override
-    public int updDelFlag(Long adviceId,String systemNO){
-        return adviceMapper.updDelFlag(adviceId,systemNO);
+    public int updDelFlag(Long adviceId, String systemNO) {
+        return adviceMapper.updDelFlag(adviceId, systemNO);
     }
 
     @Override
-    public int updDelFlags(String adviceIds,String systemNO){
+    public int updDelFlags(String adviceIds, String systemNO) {
         String arr[] = adviceIds.split(",");
         List ids = new ArrayList();
-        for(int i=0;i<arr.length;i++){
+        for (int i = 0; i < arr.length; i++) {
             ids.add(arr[i]);
         }
-        return adviceMapper.delAdviceByIds(ids,systemNO);
+        return adviceMapper.delAdviceByIds(ids, systemNO);
     }
 
     //判空工具类
-    private void isEmpty(Advice advice){
-        if (!StringUtils.isNotEmpty(advice.getSystemNO())){
+    private void isEmpty(Advice advice) {
+        if (!StringUtils.isNotEmpty(advice.getSystemNO())) {
             throw new RuntimeException("必填字段不能为空1");
         }
-        if(!StringUtils.isNotEmpty(advice.getEventTypeId().toString())){
+        if (!StringUtils.isNotEmpty(advice.getEventTypeId().toString())) {
             throw new RuntimeException("必填字段不能为空2");
         }
-        if(!StringUtils.isNotEmpty(advice.getAdviceTitle())){
+        if (!StringUtils.isNotEmpty(advice.getAdviceTitle())) {
             throw new RuntimeException("必填字段不能为空3");
         }
-        if(!StringUtils.isNotEmpty(advice.getSuggestedContent())){
+        if (!StringUtils.isNotEmpty(advice.getSuggestedContent())) {
             throw new RuntimeException("必填字段不能为空4");
         }
 

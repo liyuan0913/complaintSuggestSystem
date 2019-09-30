@@ -4,7 +4,7 @@ server:
     context-path: /suggestion
 spring:
   datasource:
-    url: jdbc:dm://10.13.16.239:5236/SUGGES
+    url: jdbc:dm://localhost:5236/SUGGES
     driver-class-name: dm.jdbc.driver.DmDriver
     username: SUGGES
     password: 1234567890

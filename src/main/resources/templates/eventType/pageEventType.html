@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:replace="common/head :: head(~{::title},~{})">
+    <title>建议服务平台</title>
+</head>
+<body class="easyui-layout">
+<div class="easyui-layout" data-options="region:'center'" style="width: 82%;">
+
+    <div data-options="region: 'north'" style="margin:10px 0 10px 10px;border: 0;">
+        <!--根据系统编码进行查询-->
+        <span style="padding-right: 10px">系统编码:</span><input class="easyui-textbox" id="systemNo" >
+        <button class="easyui-linkbutton" iconCls="icon-search" onclick="serachsystemNo()">查询</button>
+        <button class="easyui-linkbutton" iconCls="icon-clear" onclick="clearData()">清空</button>
+    </div>
+
+    <div data-options="region: 'center'" style="margin:0 4px;border: 0;">
+        <table id="dg_position" style="margin: 0 auto;width: 98%;height: 100%;">
+            <thead>
+            <tr align='center'>
+                <th data-options="field:'ck',checkbox:true"></th>
+                <th data-options="field:'systemNO',width:80,align:'center'">系统编码</th>
+                <th data-options="field:'complaintTypeId',width:80,align:'center'">投诉id</th>
+                <th data-options="field:'eventType',width:80,align:'center'">事件类型</th>
+                <th data-options="field:'createDate',width:80,align:'center'">创建时间</th>
+                <th data-options="field:'operation',width:150,align:'center'" formatter="operation">操作</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div id="toolbar_position">
+        <a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="destroyAdvice()">批量删除</a>
+    </div>
+
+</div>
+</body>
+<script>
+
+    //默认加载空的建议列表数据
+    loadData(null);
+
+    /*按照条件查询建议信息*/
+    function serachsystemNo() {
+
+        var systemNo = $("#systemNo").val().replace(/\s*/g, "");
+        var params = {
+            "systemNo": systemNo
+        };
+        loadData(params);
+    }
+
+    function loadData(params) {
+        var options = tableOptions;
+        options.toolbar = "#toolbar_position";
+        options.url = rootPath + "/suggestion/type/getEventTypeList/";
+        options.queryParams = params;
+        $("#dg_position").datagrid(options);
+        window.top["roload_datagrid"] = function () {
+            $('#dg_position').datagrid('reload');
+        };
+    }
+
+
+    function addTree(id, name, addtree) {
+        if (addtree) {
+            addOrgTree($('#orgDeptTree'), id, name); // 添加子节点
+        } else {
+            changeOrgTree($('#orgDeptTree'), id, name); // 修改子节点
+        }
+        $('#dg_position').datagrid('reload'); // 数据网格刷新
+    }
+
+    function positionTableRefresh() {
+        $('#dg_position').datagrid('reload'); // 数据网格刷新
+    }
+
+    //操作按钮(修改，删除)
+    function operation(value, rowData, rowIndex) {
+        return '<button onclick="updateAdvice(\'' + rowData["positionId"] + '\')" >修改</button> ' +
+            '<button onclick="deleteAdvice(\'' + rowData["adviceId"] + '\')" >删除</button>  ' +
+            //'<button onclick="getAdvice(\''+rowData["adviceId"]+'\')" >查看详情</button>  ' ;
+            '<a class="easyui-linkbutton" href="test?adviceId=' + rowData["adviceId"] + '">查看详情</a>  ';
+    }
+
+    //删除数据的方法
+    function deleteAdvice(adviceId) {
+        var row = $('#dg_position').datagrid('getSelected');   //拿到本行对象的全部属性
+        var systemNO = row.systemNO;
+        $.messager.confirm('删除', '你确定删除这条数据吗', function (r) {
+            if (r) {
+                $.ajax({
+                    url: rootPath + "/suggestion/advice/updDelFlag/" + adviceId,
+                    type: "post",
+                    data: {"systemNO": systemNO},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == 200) {
+                            showMessage(data.msg);
+                            $('#dg_position').datagrid('reload');	// reload the data\
+                        } else {
+                            alertInfoMessage(data.msg);
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    //批量删除岗位信息
+    function destroyAdvice() {
+        var row = $('#dg_position').datagrid('getChecked');   //拿到本行对象的全部属性
+        var i = 0;
+        var ids = "";
+        for (i; i < row.length; i++) {
+            ids += row[i].adviceId;
+            if (i < row.length - 1) {
+                ids += ',';
+            } else {
+                break;
+            }
+        }
+
+        if (row.length == 0) {
+            $.messager.alert('提示', '请选择您要删除的建议！')
+        }
+        if (row.length > 0) {
+            $.messager.confirm('提示', '确定删除建议吗？', function (isDelete) {
+                if (isDelete) {
+                    $.ajax({
+                        type: 'post',
+                        dataType: 'json',
+                        data: {'adviceIds': ids},
+                        url: rootPath + "/suggestion/advice/delAdviceByIds",
+                        success: function (data) {
+                            if (data.code == 200) {
+                                $.messager.confirm('提示', '删除成功！')
+                                $('#dg_position').datagrid("reload");            //删除成功后，刷新页面
+                            } else {
+                                $.messager.alert('提示', '删除失败！')
+                            }
+                        }
+
+                    });
+                }
+            });
+        }
+    }
+
+
+    //弹出窗口
+    function dialogPosition(title, url, params) {
+        openDialog("position", {
+            title: title,
+            width: 530,
+            height: 420,
+            href: url,
+            queryParams: params
+        })
+    }
+
+
+    //单个修改或添加岗位信息
+    function updatePosition(positionId) {
+        if (isNull(positionId)) {
+            dialogPosition("添加岗位信息", rootPath + "/base/position/position.html", {
+                positionId: positionId,
+                orgId: positionParams.orgId
+            });
+        } else {
+            dialogPosition("修改岗位信息", rootPath + "/base/position/position.html", {positionId: positionId});
+        }
+    }
+
+    /**
+     * 角色授权
+     * @param positionId 岗位Id
+     */
+    function rolePosition(positionId) {
+        openDialog("rolePosition", {
+            title: "角色授权",
+            width: 530,
+            height: 420,
+            href: rootPath + "/base/position/roleposition.html",
+            queryParams: {positionId: positionId}
+        })
+    }
+
+    function clearData() {
+        $('.easyui-textbox').textbox("setValue", ''); // 清空input框
+    }
+
+
+    //查看详情
+    function getAdvice(adviceId) {
+        location.href = "test?adviceId='+adviceId+'";
+    }
+
+
+</script>
+</html>

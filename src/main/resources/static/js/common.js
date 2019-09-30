@@ -33,7 +33,7 @@ var tableOptions = {
                 rows: data
             }
         }else {
-            var result = data.result;
+            var result = data;
             data = {
                 total: result.total,
                 rows: result.records

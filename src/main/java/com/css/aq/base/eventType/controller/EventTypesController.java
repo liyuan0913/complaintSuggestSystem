@@ -1,7 +1,9 @@
 package com.css.aq.base.eventType.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.css.aq.base.Result;
 import com.css.aq.base.eventType.entity.EventTypes;
 import com.css.aq.base.eventType.service.EventTypesService;
@@ -36,7 +38,7 @@ public class EventTypesController {
      * @param eventTypes
      * @return
      */
-    @PostMapping("/addEventType")
+    @PostMapping("addEventType")
     @ApiOperation(value = "管理员增加事件类型")
     public Map<String,Object> addEventType(@ApiParam("事件类型") @ModelAttribute EventTypes eventTypes){
         Map<String,Object> result = new HashMap<>();
@@ -56,18 +58,23 @@ public class EventTypesController {
 
     /**
      * 查询事件类型列表(测试ok)
-     * @param systemNo
+     * @param eventTypes
      * @return
      */
-    @GetMapping(value = "/getEventTypeList")
+    @GetMapping(value = "getEventTypeList")
     @ApiOperation(value = "事件类型列表")
-    public Map<String,Object> dirListPage(@ApiParam("系统编码") @RequestParam String systemNo) {
+    public Map<String,Object> dirListPage(@ApiParam("系统编码") @ModelAttribute EventTypes eventTypes,
+                                          @ApiParam("页码") @RequestParam Integer pageNo,
+                                          @ApiParam("每页数量") @RequestParam Integer pageSize) {
+        System.out.println("-----------------");
+        System.out.println(eventTypes.getSystemNo());
+
         Map result = new HashMap<String, Object>();
         try {
-            if (StringUtils.isEmpty(systemNo)) {
+            if (StringUtils.isEmpty(eventTypes.getSystemNo())) {
                 throw new RuntimeException("请您选择需要查询的系统");
             }
-            List<EventTypes> eventTypeList = eventTypesService.getEventTypeList(systemNo);
+            IPage<EventTypes> eventTypeList = eventTypesService.getEventTypeList(eventTypes, pageNo, pageSize);
             result.put("code", Result.successCode);
             /*result.put("msg","查询成功");*/
             result.put("data", eventTypeList);
@@ -170,9 +177,5 @@ public class EventTypesController {
             result.put("data", Result.data);
         }
         return result;
-
-
     }
-
-
 }

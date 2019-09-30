@@ -28,4 +28,15 @@ public class PageController {
     }
 
 
+    //------------------------事件类型相关----------------------------------start
+
+    @GetMapping(value = "eventType/eventType")
+    public String eventType(){
+        return "eventType/eventType";
+    }
+
+    @GetMapping(value = "eventType/pageEventType")
+    public String pageEventType(){
+        return "eventType/pageEventType";
+    }
 }
